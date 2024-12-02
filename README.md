@@ -25,12 +25,8 @@ npx ts-node server.ts
 ### Queries and mutations
 1. Run a regression model
 ```graphql
-mutation {
-  runRegression(
-    data: [{ x: 1.0, y: 2.0 }, { x: 2.0, y: 4.0 }],
-    modelType: LASSO,
-    alpha: 0.1
-  ) {
+mutation createModel($dataPoints: [RegressionInput!]!, $modelType: ModelType!, $alpha: Float) {
+  createModel(data: $dataPoints, modelType: $modelType, alpha: $alpha) {
     id
     type
     status
@@ -42,11 +38,12 @@ mutation {
 
 2. Check model status
 ```graphql
-query {
-  modelStatus(id: "<MODEL_ID>") {
-    id
+query getModel($modelId: ID!) {
+  modelStatus(modelId: $modelId) {
     type
     status
+    alpha
+    createTime
     waitTime
   }
 }
@@ -54,7 +51,28 @@ query {
 
 3. Get prediction
 ```graphql
-query {
-  predict(modelId: "<MODEL_ID>", x: 5.0)
+query makePrediction($modelId: ID!, $x: Float!) {
+  predict(modelId: $modelId, x: $x) 
+}
+```
+
+4. Get all models created by the current user
+```graphql
+query getAllModels {
+  getAllModels {
+    id
+    status
+    type
+    createTime
+  }
+}
+```
+
+5. Delete a model created by the current user
+```graphql
+mutation deleteModel($modelId: ID!) {
+  deleteModel(modelId: $modelId) {
+    id
+  }
 }
 ```

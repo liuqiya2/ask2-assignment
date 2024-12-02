@@ -20,11 +20,15 @@ const yoga = createYoga({
         console.error("Unknown Error:", error);
       }
     },
-  });
-  
+    context: async ({ request }: { request: any }) => {
+      // get custom header value
+      const userId = request.headers.get('userId') ?? null
+      return { userId }
+    }
+  });  
 
 const server = createServer(yoga);
 
-server.listen(4000, () => {
-    console.log('Yoga is listening at http://localhost:4000/graphql');
+server.listen(4001, () => {
+    console.log('Yoga is listening at http://localhost:4001/graphql');
 });

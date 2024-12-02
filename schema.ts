@@ -15,7 +15,7 @@ const typeDefs = /* GraphQL */ `
         type: ModelType!
         status: String!
         alpha: Float
-        createTime: Float
+        createTime: String
     }
 
     type ModelStatus {
@@ -23,21 +23,19 @@ const typeDefs = /* GraphQL */ `
         type: ModelType!
         status: String!
         alpha: Float
-        createTime: Float
+        createTime: String
         waitTime: Float
     }
 
     type Query {
-        modelStatus(id: ID!): ModelStatus!
+        modelStatus(modelId: ID!): ModelStatus!
         predict(modelId: ID!, x: Float!): Float!
+        getAllModels: [Model!]!
     }
 
     type Mutation {
-        runRegression(
-            data: [RegressionInput!]!,
-            modelType: ModelType!,
-            alpha: Float
-        ): Model!
+        createModel(data: [RegressionInput!]!, modelType: ModelType!, alpha: Float): Model
+        deleteModel(modelId: ID!): Model
     }
 `
 
